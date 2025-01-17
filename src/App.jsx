@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
@@ -24,6 +24,13 @@ function App() {
     });
   };
 
+  const getProducts = () => {
+    axios
+      .get(`${BASE_URL}/api/${API_PATH}/admin/products`)
+      .then((res) => setProductList(res.data.products))
+      .catch((error) => console.error(error));
+  };
+
   const handleLogin = (e) => {
     e.preventDefault();
     axios
@@ -34,11 +41,7 @@ function App() {
         document.cookie = `hexToken=${token}; expires=${new Date(expired)}`;
         axios.defaults.headers.common["Authorization"] = token;
 
-        axios
-          .get(`${BASE_URL}/api/${API_PATH}/admin/products`)
-          .then((res) => setProductList(res.data.products))
-          .catch((error) => console.error(error));
-
+        getProducts();
         setIsLogin(true);
       })
       .catch((error) => alert("登入失敗"));
@@ -47,9 +50,23 @@ function App() {
   const checkIsLogin = () => {
     axios
       .post(`${BASE_URL}/api/user/check`)
-      .then((res) => alert(`使用者已登入`))
+      .then((res) => {
+        getProducts();
+        setIsLogin(true);
+      })
       .catch((error) => console.error(error));
   };
+
+  useEffect(() => {
+    const token = document.cookie.replace(
+      /(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/,
+      "$1"
+    );
+
+    axios.defaults.headers.common["Authorization"] = token;
+
+    checkIsLogin();
+  }, []);
 
   return (
     <>
