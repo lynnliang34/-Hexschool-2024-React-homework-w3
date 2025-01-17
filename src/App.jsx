@@ -160,6 +160,31 @@ function App() {
     });
   };
 
+  const createProduct = async () => {
+    try {
+      await axios.post(`${BASE_URL}/api/${API_PATH}/admin/product`, {
+        data: {
+          ...tempProduct,
+          origin_price: Number(tempProduct.origin_price),
+          price: Number(tempProduct.price),
+          is_enabled: tempProduct.is_enabled ? 1 : 0,
+        },
+      });
+    } catch (error) {
+      alert("新增產品失敗");
+    }
+  };
+
+  const handleUpdateProduct = async () => {
+    try {
+      await createProduct();
+      getProducts();
+      handleCloseProductModal();
+    } catch (error) {
+      alert("更新產品失敗");
+    }
+  };
+
   return (
     <>
       {isLogin ? (
@@ -483,7 +508,11 @@ function App() {
               >
                 取消
               </button>
-              <button type="button" className="btn btn-primary">
+              <button
+                onClick={handleUpdateProduct}
+                type="button"
+                className="btn btn-primary"
+              >
                 確認
               </button>
             </div>
