@@ -83,10 +83,15 @@ function App() {
 
   // 加入產品 Modal
   const productModalRef = useRef(null);
+  const delProductModalRef = useRef(null);
   const [modalMode, setmodalMode] = useState(null);
 
   useEffect(() => {
     new Modal(productModalRef.current, {
+      backdrop: false,
+    });
+
+    new Modal(delProductModalRef.current, {
       backdrop: false,
     });
   }, []);
@@ -113,6 +118,18 @@ function App() {
 
   const handleCloseProductModal = () => {
     const modalInstance = Modal.getInstance(productModalRef.current);
+    modalInstance.hide();
+  };
+
+  const handleOpenDelProductModal = (product) => {
+    setTempProduct(product);
+
+    const modalInstance = Modal.getInstance(delProductModalRef.current);
+    modalInstance.show();
+  };
+
+  const handleCloseDelProductModal = () => {
+    const modalInstance = Modal.getInstance(delProductModalRef.current);
     modalInstance.hide();
   };
 
@@ -205,6 +222,34 @@ function App() {
     }
   };
 
+  const deleteProduct = async () => {
+    try {
+      await axios.delete(
+        `${BASE_URL}/api/${API_PATH}/admin/product/${tempProduct.id}`,
+        {
+          data: {
+            ...tempProduct,
+            origin_price: Number(tempProduct.origin_price),
+            price: Number(tempProduct.price),
+            is_enabled: tempProduct.is_enabled ? 1 : 0,
+          },
+        }
+      );
+    } catch (error) {
+      alert("刪除產品失敗");
+    }
+  };
+
+  const handleDeleteProduct = async () => {
+    try {
+      await deleteProduct();
+      getProducts();
+      handleCloseDelProductModal();
+    } catch (error) {
+      alert("刪除產品失敗");
+    }
+  };
+
   return (
     <>
       {isLogin ? (
@@ -250,6 +295,7 @@ function App() {
                             編輯
                           </button>
                           <button
+                            onClick={() => handleOpenDelProductModal(product)}
                             type="button"
                             className="btn btn-outline-danger btn-sm"
                           >
@@ -534,6 +580,49 @@ function App() {
                 className="btn btn-primary"
               >
                 確認
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        ref={delProductModalRef}
+        className="modal fade"
+        id="delProductModal"
+        tabIndex="-1"
+        style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+      >
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5">刪除產品</h1>
+              <button
+                onClick={handleCloseDelProductModal}
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body">
+              你是否要刪除
+              <span className="text-danger fw-bold">{tempProduct.title}</span>
+            </div>
+            <div className="modal-footer">
+              <button
+                onClick={handleCloseDelProductModal}
+                type="button"
+                className="btn btn-secondary"
+              >
+                取消
+              </button>
+              <button
+                onClick={handleDeleteProduct}
+                type="button"
+                className="btn btn-danger"
+              >
+                刪除
               </button>
             </div>
           </div>
