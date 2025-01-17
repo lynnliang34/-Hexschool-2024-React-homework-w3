@@ -82,7 +82,7 @@ function App() {
                     <th scope="col">原價</th>
                     <th scope="col">售價</th>
                     <th scope="col">是否啟用</th>
-                    <th scope="col">查看細節</th>
+                    <th scope="col">編輯 / 刪除</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -93,15 +93,20 @@ function App() {
                       <td>{product.price}</td>
                       <td>{product.is_enabled ? "是" : "否"}</td>
                       <td>
-                        <button
-                          onClick={() => {
-                            setTempProduct(product);
-                          }}
-                          type="button"
-                          className="btn btn-primary"
-                        >
-                          查看細節
-                        </button>
+                        <div className="btn-group">
+                          <button
+                            type="button"
+                            className="btn btn-outline-primary btn-sm me-2"
+                          >
+                            編輯
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn-outline-danger btn-sm"
+                          >
+                            刪除
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
