@@ -5,10 +5,22 @@ import { Modal } from "bootstrap";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
 
+const defaultModalState = {
+  imageUrl: "",
+  title: "",
+  category: "",
+  unit: "",
+  origin_price: "",
+  price: "",
+  description: "",
+  content: "",
+  is_enabled: 0,
+  imagesUrl: [""],
+};
+
 function App() {
   const [isLogin, setIsLogin] = useState(false);
 
-  const [tempProduct, setTempProduct] = useState({});
   const [productList, setProductList] = useState([]);
 
   const [account, setAccount] = useState({
@@ -69,6 +81,7 @@ function App() {
     checkIsLogin();
   }, []);
 
+  // 加入產品 Modal
   const productModalRef = useRef(null);
 
   useEffect(() => {
@@ -85,6 +98,17 @@ function App() {
   const handleCloseProductModal = () => {
     const modalInstance = Modal.getInstance(productModalRef.current);
     modalInstance.hide();
+  };
+
+  const [tempProduct, setTempProduct] = useState(defaultModalState);
+
+  const handleModalInputChange = (e) => {
+    const { value, name } = e.target;
+
+    setTempProduct({
+      ...tempProduct,
+      [name]: value,
+    });
   };
 
   return (
@@ -205,6 +229,8 @@ function App() {
                     </label>
                     <div className="input-group">
                       <input
+                        value={tempProduct.imageUrl}
+                        onChange={handleModalInputChange}
                         name="imageUrl"
                         type="text"
                         id="primary-image"
@@ -212,7 +238,11 @@ function App() {
                         placeholder="請輸入圖片連結"
                       />
                     </div>
-                    <img src="" alt="" className="img-fluid" />
+                    <img
+                      src={tempProduct.imageUrl}
+                      alt={tempProduct.title}
+                      className="img-fluid"
+                    />
                   </div>
 
                   {/* 副圖 */}
@@ -249,6 +279,8 @@ function App() {
                       標題
                     </label>
                     <input
+                      value={tempProduct.title}
+                      onChange={handleModalInputChange}
                       name="title"
                       id="title"
                       type="text"
@@ -262,6 +294,8 @@ function App() {
                       分類
                     </label>
                     <input
+                      value={tempProduct.category}
+                      onChange={handleModalInputChange}
                       name="category"
                       id="category"
                       type="text"
@@ -275,6 +309,8 @@ function App() {
                       單位
                     </label>
                     <input
+                      value={tempProduct.unit}
+                      onChange={handleModalInputChange}
                       name="unit"
                       id="unit"
                       type="text"
@@ -289,6 +325,8 @@ function App() {
                         原價
                       </label>
                       <input
+                        value={tempProduct.origin_price}
+                        onChange={handleModalInputChange}
                         name="origin_price"
                         id="origin_price"
                         type="number"
@@ -301,6 +339,8 @@ function App() {
                         售價
                       </label>
                       <input
+                        value={tempProduct.price}
+                        onChange={handleModalInputChange}
                         name="price"
                         id="price"
                         type="number"
@@ -315,6 +355,8 @@ function App() {
                       產品描述
                     </label>
                     <textarea
+                      value={tempProduct.description}
+                      onChange={handleModalInputChange}
                       name="description"
                       id="description"
                       className="form-control"
@@ -328,6 +370,8 @@ function App() {
                       說明內容
                     </label>
                     <textarea
+                      value={tempProduct.content}
+                      onChange={handleModalInputChange}
                       name="content"
                       id="content"
                       className="form-control"
@@ -338,6 +382,8 @@ function App() {
 
                   <div className="form-check">
                     <input
+                      value={tempProduct.is_enabled}
+                      onChange={handleModalInputChange}
                       name="is_enabled"
                       type="checkbox"
                       className="form-check-input"
