@@ -127,6 +127,19 @@ function App() {
     });
   };
 
+  const handleImageChange = (e, index) => {
+    const { value } = e.target;
+
+    const newImages = [...tempProduct.imagesUrl];
+
+    newImages[index] = value;
+
+    setTempProduct({
+      ...tempProduct,
+      imagesUrl: newImages,
+    });
+  };
+
   return (
     <>
       {isLogin ? (
@@ -276,6 +289,8 @@ function App() {
                           副圖 {index + 1}
                         </label>
                         <input
+                          value={image}
+                          onChange={(e) => handleImageChange(e, index)}
                           id={`imagesUrl-${index + 1}`}
                           type="text"
                           placeholder={`圖片網址 ${index + 1}`}
