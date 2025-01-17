@@ -72,12 +72,19 @@ function App() {
   const productModalRef = useRef(null);
 
   useEffect(() => {
-    new Modal(productModalRef.current);
+    new Modal(productModalRef.current, {
+      backdrop: false,
+    });
   }, []);
 
   const handleOpenProductModal = () => {
     const modalInstance = Modal.getInstance(productModalRef.current);
     modalInstance.show();
+  };
+
+  const handleCloseProductModal = () => {
+    const modalInstance = Modal.getInstance(productModalRef.current);
+    modalInstance.hide();
   };
 
   return (
@@ -182,6 +189,7 @@ function App() {
             <div className="modal-header border-bottom">
               <h5 className="modal-title fs-4">新增產品</h5>
               <button
+                onClick={handleCloseProductModal}
                 type="button"
                 className="btn-close"
                 aria-label="Close"
@@ -344,7 +352,11 @@ function App() {
             </div>
 
             <div className="modal-footer border-top bg-light">
-              <button type="button" className="btn btn-secondary">
+              <button
+                onClick={handleCloseProductModal}
+                type="button"
+                className="btn btn-secondary"
+              >
                 取消
               </button>
               <button type="button" className="btn btn-primary">
