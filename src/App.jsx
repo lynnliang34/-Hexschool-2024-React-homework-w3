@@ -63,7 +63,7 @@ function App() {
             檢查是否登入
           </button>
           <hr />
-          <div className="row row-cols-2">
+          <div className="row">
             <div className="col">
               <h2 className="fw-bold">產品列表</h2>
               <table className="table table-hover align-middle">
@@ -98,51 +98,6 @@ function App() {
                   ))}
                 </tbody>
               </table>
-            </div>
-            <div className="col">
-              <h2 className="fw-bold mb-3">單一產品細節</h2>
-
-              {tempProduct.title ? (
-                <div className="card">
-                  <img
-                    src={tempProduct.imageUrl}
-                    className="card-img-top"
-                    alt={tempProduct.title}
-                  />
-                  <div className="card-body">
-                    <h4 className="card-title fw-bold">
-                      {tempProduct.title}
-                      <span className="badge text-bg-primary ms-2">
-                        {tempProduct.category}
-                      </span>
-                    </h4>
-                    <p className="card-text">
-                      商品描述：{tempProduct.description}
-                    </p>
-                    <p className="card-text">商品內容：{tempProduct.content}</p>
-                    <p className="card-text">
-                      <del>{tempProduct.origin_price}</del> /{" "}
-                      {tempProduct.price} 元
-                    </p>
-                    <h5 className="card-title mb-0">更多圖片：</h5>
-                    <div className="row row-cols-2">
-                      {tempProduct.imagesUrl?.map((image, index) => {
-                        return (
-                          <div className="col">
-                            <img
-                              className="img-fluid mt-3"
-                              src={image}
-                              key={index}
-                            />
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <p className="text-secondary">請選擇一個商品查看</p>
-              )}
             </div>
           </div>
         </div>
