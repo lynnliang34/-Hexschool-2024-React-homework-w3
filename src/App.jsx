@@ -103,11 +103,11 @@ function App() {
   const [tempProduct, setTempProduct] = useState(defaultModalState);
 
   const handleModalInputChange = (e) => {
-    const { value, name } = e.target;
+    const { value, name, checked, type } = e.target;
 
     setTempProduct({
       ...tempProduct,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
@@ -382,7 +382,7 @@ function App() {
 
                   <div className="form-check">
                     <input
-                      value={tempProduct.is_enabled}
+                      checked={tempProduct.is_enabled}
                       onChange={handleModalInputChange}
                       name="is_enabled"
                       type="checkbox"
