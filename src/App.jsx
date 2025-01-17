@@ -140,6 +140,26 @@ function App() {
     });
   };
 
+  const handleAddImage = () => {
+    const newImages = [...tempProduct.imagesUrl, ""];
+
+    setTempProduct({
+      ...tempProduct,
+      imagesUrl: newImages,
+    });
+  };
+
+  const handleRemoveImage = () => {
+    const newImages = [...tempProduct.imagesUrl];
+
+    newImages.pop();
+
+    setTempProduct({
+      ...tempProduct,
+      imagesUrl: newImages,
+    });
+  };
+
   return (
     <>
       {isLogin ? (
@@ -305,6 +325,29 @@ function App() {
                         )}
                       </div>
                     ))}
+
+                    <div className="btn-group w-100">
+                      {tempProduct.imagesUrl.length < 5 &&
+                        tempProduct.imagesUrl[
+                          tempProduct.imagesUrl.length - 1
+                        ] !== "" && (
+                          <button
+                            onClick={handleAddImage}
+                            className="btn btn-outline-primary btn-sm w-100"
+                          >
+                            新增圖片
+                          </button>
+                        )}
+
+                      {tempProduct.imagesUrl.length > 1 && (
+                        <button
+                          onClick={handleRemoveImage}
+                          className="btn btn-outline-danger btn-sm w-100"
+                        >
+                          取消圖片
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
 
