@@ -55,14 +55,6 @@ function App() {
     <>
       {isLogin ? (
         <div className="container mt-5">
-          <button
-            type="button"
-            onClick={checkIsLogin}
-            className="btn btn-success "
-          >
-            檢查是否登入
-          </button>
-          <hr />
           <div className="row">
             <div className="col">
               <h2 className="fw-bold">產品列表</h2>
