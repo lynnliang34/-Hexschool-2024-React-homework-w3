@@ -282,7 +282,13 @@ function App() {
                       <th scope="row">{product.title}</th>
                       <td>{product.origin_price}</td>
                       <td>{product.price}</td>
-                      <td>{product.is_enabled ? "是" : "否"}</td>
+                      <td>
+                        {product.is_enabled ? (
+                          <span className="text-success">啟用</span>
+                        ) : (
+                          <span>未啟用</span>
+                        )}
+                      </td>
                       <td>
                         <div className="btn-group">
                           <button
