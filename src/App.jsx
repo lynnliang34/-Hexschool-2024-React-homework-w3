@@ -74,7 +74,12 @@ function App() {
         <div className="container mt-5">
           <div className="row">
             <div className="col">
-              <h2 className="fw-bold">產品列表</h2>
+              <div className="d-flex justify-content-between">
+                <h2 className="fw-bold">產品列表</h2>
+                <button type="button" className="btn btn-primary">
+                  建立新的產品
+                </button>
+              </div>
               <table className="table table-hover align-middle">
                 <thead>
                   <tr>
