@@ -83,6 +83,7 @@ function App() {
 
   // 加入產品 Modal
   const productModalRef = useRef(null);
+  const [modalMode, setmodalMode] = useState(null);
 
   useEffect(() => {
     new Modal(productModalRef.current, {
@@ -90,7 +91,22 @@ function App() {
     });
   }, []);
 
-  const handleOpenProductModal = () => {
+  const handleOpenProductModal = (mode, product) => {
+    setmodalMode(mode);
+
+    switch (mode) {
+      case "create":
+        setTempProduct(defaultModalState);
+        break;
+
+      case "edit":
+        setTempProduct(product);
+        break;
+
+      default:
+        break;
+    }
+
     const modalInstance = Modal.getInstance(productModalRef.current);
     modalInstance.show();
   };
@@ -120,7 +136,7 @@ function App() {
               <div className="d-flex justify-content-between">
                 <h2 className="fw-bold">產品列表</h2>
                 <button
-                  onClick={handleOpenProductModal}
+                  onClick={() => handleOpenProductModal("create")}
                   type="button"
                   className="btn btn-primary"
                 >
@@ -147,7 +163,9 @@ function App() {
                       <td>
                         <div className="btn-group">
                           <button
-                            onClick={handleOpenProductModal}
+                            onClick={() =>
+                              handleOpenProductModal("edit", product)
+                            }
                             type="button"
                             className="btn btn-outline-primary btn-sm me-2"
                           >
@@ -211,7 +229,9 @@ function App() {
         <div className="modal-dialog modal-dialog-centered modal-xl">
           <div className="modal-content border-0 shadow">
             <div className="modal-header border-bottom">
-              <h5 className="modal-title fs-4">新增產品</h5>
+              <h5 className="modal-title fs-4">
+                {modalMode === "create" ? "新增產品" : "編輯產品"}
+              </h5>
               <button
                 onClick={handleCloseProductModal}
                 type="button"
