@@ -175,9 +175,29 @@ function App() {
     }
   };
 
-  const handleUpdateProduct = async () => {
+  const updateProduct = async () => {
     try {
-      await createProduct();
+      await axios.put(
+        `${BASE_URL}/api/${API_PATH}/admin/product/${tempProduct.id}`,
+        {
+          data: {
+            ...tempProduct,
+            origin_price: Number(tempProduct.origin_price),
+            price: Number(tempProduct.price),
+            is_enabled: tempProduct.is_enabled ? 1 : 0,
+          },
+        }
+      );
+    } catch (error) {
+      alert("更新產品失敗");
+    }
+  };
+
+  const handleUpdateProduct = async () => {
+    const apiCall = modalMode === "create" ? createProduct : updateProduct;
+
+    try {
+      await apiCall();
       getProducts();
       handleCloseProductModal();
     } catch (error) {
