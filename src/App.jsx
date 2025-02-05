@@ -2,9 +2,11 @@ import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import { Modal } from "bootstrap";
 
+// 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
 
+// Modal 初始狀態
 const defaultModalState = {
   imageUrl: "",
   title: "",
@@ -18,16 +20,20 @@ const defaultModalState = {
   imagesUrl: [""],
 };
 
+// React 組件
 function App() {
+  // 記錄使用者是否已登入
   const [isLogin, setIsLogin] = useState(false);
-
+  // 存放產品列表的狀態
   const [productList, setProductList] = useState([]);
-
+  // 存放登入時的帳號與密碼
   const [account, setAccount] = useState({
     username: "",
     password: "",
   });
 
+  // 處理帳號輸入
+  // 更新 account 狀態，讓使用者輸入帳號密碼時即時更新
   const handleInputChange = (e) => {
     const { value, name } = e.target;
 
@@ -37,6 +43,8 @@ function App() {
     });
   };
 
+  // 獲取產品列表
+  // 向後端 API 取得產品列表，並更新 productList
   const getProducts = () => {
     axios
       .get(`${BASE_URL}/api/${API_PATH}/admin/products`)
@@ -44,6 +52,8 @@ function App() {
       .catch((error) => console.error(error));
   };
 
+  // 登入功能
+  // 發送登入請求，成功後將 token 存入 cookie，並設置全域的 Authorization 標頭，然後獲取產品列表。
   const handleLogin = (e) => {
     e.preventDefault();
     axios
@@ -60,6 +70,8 @@ function App() {
       .catch((error) => alert("登入失敗"));
   };
 
+  // 檢查登入狀態
+  // 驗證使用者是否已登入，如果登入成功，則載入產品列表。
   const checkIsLogin = () => {
     axios
       .post(`${BASE_URL}/api/user/check`)
@@ -70,6 +82,8 @@ function App() {
       .catch((error) => console.error(error));
   };
 
+  // 初始掛載時檢查登入
+  // 當元件掛載時，從 cookie 取得 token，設置 Authorization，並檢查是否已登入。
   useEffect(() => {
     const token = document.cookie.replace(
       /(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/,
@@ -81,11 +95,13 @@ function App() {
     checkIsLogin();
   }, []);
 
-  // 加入產品 Modal
-  const productModalRef = useRef(null);
-  const delProductModalRef = useRef(null);
-  const [modalMode, setmodalMode] = useState(null);
+  //  ——————— 加入產品 Modal ———————
 
+  const productModalRef = useRef(null); // 控制產品新增/編輯的 Modal
+  const delProductModalRef = useRef(null); // 控制刪除產品的 Modal
+  const [modalMode, setmodalMode] = useState(null); // 記錄當前 Modal 是 "create" 還是 "edit"
+
+  // 初始化 Bootstrap Modal，關閉時不會自動加背景遮罩。
   useEffect(() => {
     new Modal(productModalRef.current, {
       backdrop: false,
@@ -96,14 +112,17 @@ function App() {
     });
   }, []);
 
+  // 打開產品 Modal
   const handleOpenProductModal = (mode, product) => {
     setmodalMode(mode);
 
     switch (mode) {
+      // mode === "create" 時，設置空白的產品表單
       case "create":
         setTempProduct(defaultModalState);
         break;
 
+      // mode === "edit" 時，載入選中的產品資料
       case "edit":
         setTempProduct(product);
         break;
@@ -116,11 +135,13 @@ function App() {
     modalInstance.show();
   };
 
+  // 關閉產品 Modal
   const handleCloseProductModal = () => {
     const modalInstance = Modal.getInstance(productModalRef.current);
     modalInstance.hide();
   };
 
+  // 打開刪除產品 Modal
   const handleOpenDelProductModal = (product) => {
     setTempProduct(product);
 
@@ -128,6 +149,7 @@ function App() {
     modalInstance.show();
   };
 
+  // 關閉刪除產品 Modal
   const handleCloseDelProductModal = () => {
     const modalInstance = Modal.getInstance(delProductModalRef.current);
     modalInstance.hide();
@@ -135,6 +157,7 @@ function App() {
 
   const [tempProduct, setTempProduct] = useState(defaultModalState);
 
+  //  產品表單輸入處理
   const handleModalInputChange = (e) => {
     const { value, name, checked, type } = e.target;
 
@@ -144,6 +167,7 @@ function App() {
     });
   };
 
+  // 處理圖片輸入
   const handleImageChange = (e, index) => {
     const { value } = e.target;
 
@@ -157,6 +181,7 @@ function App() {
     });
   };
 
+  // 新增圖片
   const handleAddImage = () => {
     const newImages = [...tempProduct.imagesUrl, ""];
 
@@ -166,6 +191,7 @@ function App() {
     });
   };
 
+  // 刪除圖片
   const handleRemoveImage = () => {
     const newImages = [...tempProduct.imagesUrl];
 
@@ -177,6 +203,7 @@ function App() {
     });
   };
 
+  // 新增產品
   const createProduct = async () => {
     try {
       await axios.post(`${BASE_URL}/api/${API_PATH}/admin/product`, {
@@ -192,6 +219,7 @@ function App() {
     }
   };
 
+  // 編輯產品
   const updateProduct = async () => {
     try {
       await axios.put(
@@ -210,6 +238,7 @@ function App() {
     }
   };
 
+  // 編輯產品確認鈕
   const handleUpdateProduct = async () => {
     const apiCall = modalMode === "create" ? createProduct : updateProduct;
 
@@ -222,6 +251,7 @@ function App() {
     }
   };
 
+  // 刪除產品
   const deleteProduct = async () => {
     try {
       await axios.delete(
@@ -240,6 +270,7 @@ function App() {
     }
   };
 
+  // 刪除產品確認鈕
   const handleDeleteProduct = async () => {
     try {
       await deleteProduct();
