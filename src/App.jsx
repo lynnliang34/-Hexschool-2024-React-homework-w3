@@ -45,41 +45,43 @@ function App() {
 
   // 獲取產品列表
   // 向後端 API 取得產品列表，並更新 productList
-  const getProducts = () => {
-    axios
-      .get(`${BASE_URL}/api/${API_PATH}/admin/products`)
-      .then((res) => setProductList(res.data.products))
-      .catch((error) => console.error(error));
+  const getProducts = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/api/${API_PATH}/admin/products`);
+      setProductList(res.data.products);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   // 登入功能
   // 發送登入請求，成功後將 token 存入 cookie，並設置全域的 Authorization 標頭，然後獲取產品列表。
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    axios
-      .post(`${BASE_URL}/admin/signin`, account)
-      .then((res) => {
-        const { token, expired } = res.data;
+    try {
+      const res = await axios.post(`${BASE_URL}/admin/signin`, account);
+      const { token, expired } = res.data;
 
-        document.cookie = `hexToken=${token}; expires=${new Date(expired)}`;
-        axios.defaults.headers.common["Authorization"] = token;
+      document.cookie = `hexToken=${token}; expires=${new Date(expired)}`;
+      axios.defaults.headers.common["Authorization"] = token;
 
-        getProducts();
-        setIsLogin(true);
-      })
-      .catch((error) => alert("登入失敗"));
+      await getProducts();
+      setIsLogin(true);
+    } catch (error) {
+      alert("登入失敗");
+    }
   };
 
   // 檢查登入狀態
   // 驗證使用者是否已登入，如果登入成功，則載入產品列表。
-  const checkIsLogin = () => {
-    axios
-      .post(`${BASE_URL}/api/user/check`)
-      .then((res) => {
-        getProducts();
-        setIsLogin(true);
-      })
-      .catch((error) => console.error(error));
+  const checkIsLogin = async () => {
+    try {
+      await axios.post(`${BASE_URL}/api/user/check`);
+      await getProducts();
+      setIsLogin(true);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   // 初始掛載時檢查登入
